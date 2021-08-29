@@ -1,0 +1,123 @@
+<?php 
+
+    class user{
+        // private database object\
+        private $db;
+        
+        //constructor to initialize private variable to the database connection
+        function __construct($conn){
+            $this->db = $conn;
+        }
+
+        public function insertUser($fname,$lname,$dob,$username,$password,$contact,$course1,$resaddress,$destination){
+            try {
+                $result = $this->getUserbyUsername($username);
+                if($result['num'] > 0){
+                    echo "E-Mail already Registered";
+                    return false;
+                } else{
+                    $new_password = md5($password.$username);
+                    // define sql statement to be executed
+                    $sql = "INSERT INTO userdetails (firstname,lastname,dateofbirth,username,password,contactnumber,course1,resaddress,avatar_path) VALUES (:fname,:lname,:dob,:username,:password,:contact,:course1,:resaddress,:destination)";
+                    //prepare the sql statement for execution
+                    $stmt = $this->db->prepare($sql);
+                    // bind all placeholders to the actual values
+                    $stmt->bindparam(':fname',$fname);
+                    $stmt->bindparam(':lname',$lname);
+                    $stmt->bindparam(':dob',$dob);
+                    $stmt->bindparam(':username',$username);
+                    $stmt->bindparam(':password',$new_password);
+                    $stmt->bindparam(':contact',$contact);
+                    $stmt->bindparam(':course1',$course1);
+                    $stmt->bindparam(':resaddress',$resadress);
+                    $stmt->bindparam(':destination',$destination);
+                    
+                    // execute statement
+                    $stmt->execute();
+                    return true;
+                }
+                
+        
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+                return false;
+            }
+        }
+
+        public function getUser($username,$password){
+            try{
+                $sql = "select * from userdetails where username = :username AND password = :password";
+                $stmt = $this->db->prepare($sql);
+                $stmt->bindparam(':username', $username);
+                $stmt->bindparam(':password', $password);
+                $stmt->execute();
+                $result = $stmt->fetch();
+                return $result;
+           }catch (PDOException $e) {
+                echo $e->getMessage();
+                return false;
+            }
+        }
+
+        public function getUserbyUsername($username){
+            try{
+                $sql = "select count(*) as num from userdetails where username = :username";
+                $stmt = $this->db->prepare($sql);
+                $stmt->bindparam(':username',$username);
+                $stmt->execute();
+                $result = $stmt->fetch();
+                return $result;
+            }catch (PDOException $e) {
+                    echo $e->getMessage();
+                    return false;
+            }
+        }
+        public function getUserDetails($userid){
+            try {
+                $sql = "select * from userdetails where id = :userid";
+                $stmt = $this->db->prepare($sql);
+                $stmt->bindparam(':userid', $userid);
+                $stmt->execute();
+                $result = $stmt->fetch();
+                return $result;
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+                return false;
+            }
+        }
+        public function changePwd($username,$oldpassword,$newpassword){
+            try {
+                $salted_password = md5($oldpassword.$username);
+                $new_password = md5($newpassword.$username);
+                $sql = "UPDATE `userdetails` SET `password`=:newpassword WHERE username = :username AND password = :oldpassword";
+                $stmt = $this->db->prepare($sql);
+                $stmt->bindparam(':username', $username);
+                $stmt->bindparam(':oldpassword', $salted_password);
+                $stmt->bindparam(':newpassword', $new_password);
+                $stmt->execute();
+                $result = $stmt->rowCount();
+                if ($result == 0) {
+                    echo "<div class='alert alert-danger text-center' role='alert'>Password Incorrect</div>";
+                    return false;
+                }
+                else{
+                    include './includes/successmessage.php';
+                return true;}
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+                return false;
+            }
+        }
+
+        public function getUsers(){
+            try{
+                $sql = "SELECT * FROM userdetails";
+                $result = $this->db->query($sql);
+                return $result;
+            }catch(PDOException $e){
+                echo $e->getMessage();
+                return false;
+            }
+        }
+    }
+?>
