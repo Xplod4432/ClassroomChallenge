@@ -3,26 +3,69 @@
     require './includes/header.php';
     require './db/conn.php';
     require_once './includes/auth_check.php';
-    
-    $U = $user->getUserDetails($_SESSION['userid']);
-    $results = $crud->getCourses();
+    $Sid = $_SESSION['userid'];
+    $U = $user->getUserDetails($Sid);
+    $results = $crud->getCourses($Sid);
 ?>
 <div class="row">
-    <div class="col-sm-4 my-5">
-    
+  <div class="col-sm-3 my-5">
+    <div class="card">
+    <img src="<?php echo $U['avatar_path']; ?>" class="card-img-top" alt="avatar">
+    <div class="card-body">
+    <h5 class="card-title"><?php echo $U['firstname'] . ' ' . $U['lastname']; ?></h5>
+    <p class="card-text">Date Of Birth: <?php echo $U['dateofbirth'];  ?></p>
+    <p class="card-text">
+                Email Adress: <?php echo $U['username'];  ?>
+            </p>
+            <p class="card-text">
+                Roll Number: <?php echo $U['id'];  ?>
+            </p>
     </div>
-</div>
-<div class="row row-cols-1 row-cols-md-3 g-4 px-3 mb-5 mt-3 pb-3 bg-light">
+    </div>
+  </div>
+  <div class="col-sm-4 my-5">
+    <div class="row overflow-scroll">
 <?php
   while ($r = $results->fetch(PDO::FETCH_ASSOC)) {
-    $card_src = $r['imagepath'];
-    $card_title = $r['blogtitle'];
-    $card_tag = $r['name'];
-    $card_text = $r['blogpreview'];
-    $card_href = $r['blog_id'];
+    $course_name = $r['name'];
+    $course_id = $r['course_id'];
+    $lec_time = $r[date('l')];
+    $lec_link = $r['name'];
     include "./includes/cards.php";
   }
 ?>
+</div>
+</div>
+<div class="col-sm-4 my-5">
+<p>
+  <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Upcoming Tests</a>
+  <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample2" role="button" aria-expanded="false" aria-controls="multiCollapseExample2">Assignments Due</a>
+</p>
+<div class="row">
+  <div class="col">
+    <div class="collapse multi-collapse" id="multiCollapseExample1">
+      <div class="card card-body">
+        <div class="row overflow-scroll">
+      <?php
+        $crud->getTests();
+      ?>
+        </div>
+      </div>
+  </div>
+  <div class="col">
+    <div class="collapse multi-collapse" id="multiCollapseExample2">
+      <div class="card card-body">
+        <div class="row overflow-scroll">
+          <?php
+            $crud->getAssignments();
+          ?>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
 </div>
 <?php
   include 'includes/footer.php'

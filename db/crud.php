@@ -8,11 +8,8 @@
 
         public function insertDetails($fname,$lname,$dob,$email,$contact,$course1,$resaddress,$destination){
             try {
-                // define sql statement to be executed
                 $sql = "INSERT INTO userdetails (firstname,lastname,dateofbirth,username,contactnumber,course1,resaddress,avatar_path) VALUES (:fname,:lname,:dob,:email,:contact,:course1,:resaddress,:destination)";
-                //prepare the sql statement for execution
                 $stmt = $this->db->prepare($sql);
-                // bind all placeholders to the actual values
                 $stmt->bindparam(':fname',$fname);
                 $stmt->bindparam(':lname',$lname);
                 $stmt->bindparam(':dob',$dob);
@@ -21,15 +18,122 @@
                 $stmt->bindparam(':course1',$course1);
                 $stmt->bindparam(':resaddress',$resadress);
                 $stmt->bindparam(':destination',$destination);
-
-                // execute statement
                 $stmt->execute();
                 return true;
-        
             } catch (PDOException $e) {
                 echo $e->getMessage();
                 return false;
             }
+        }
+
+        public function getCourses(){
+            try{
+                $sql = "SELECT * FROM `courses`";
+                $result = $this->db->query($sql);
+                return $result;
+            }catch (PDOException $e) {
+                echo $e->getMessage();
+                return false;
+            }
+            
+        }
+
+        public function insertTests($cid,$dot,$mm){
+            try {
+                $sql = "INSERT INTO `tests`(`course_id`, `dateoftest`, `max_marks`) VALUES (:cid,:dot,:mm)";
+                $stmt = $this->db->prepare($sql);
+                $stmt->bindparam(':cid',$cid);
+                $stmt->bindparam(':dot',$dot);
+                $stmt->bindparam(':mm',$mm);
+                $stmt->execute();
+                return true;
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+                return false;
+            }
+        }
+
+        public function attemptTest($Sid,$tid,$mob){
+            try {
+                $sql = "INSERT INTO `testattempted`(`test_id`, `id`, `marks_ob`) VALUES (:tid,:Sid,:mob)";
+                $stmt = $this->db->prepare($sql);
+                $stmt->bindparam(':Sid',$Sid);
+                $stmt->bindparam(':tid',$tid);
+                $stmt->bindparam(':mob',$mob);
+                $stmt->execute();
+                return true;
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+                return false;
+            }
+        }
+        
+        public function getTests(){
+            try{
+                $sql = "SELECT * FROM `tests` a inner join courses s on a.course_id = s.course_id WHERE `dateoftest` >= CURDATE()";
+                $stmt = $this->db->prepare($sql);
+                $stmt->execute();
+                while ($r=$stmt->fetch(PDO::FETCH_ASSOC)){
+                    $course_name = $r['name'];
+                    $course_id = $r['max_marks'];
+                    $lec_time = $r['dateoftest'];
+                    $lec_link = $r['test_id'];
+                    include "./includes/tcards.php";
+                }
+            }catch (PDOException $e) {
+                echo $e->getMessage();
+                return false;
+            }
+            
+        }
+
+        public function insertAssignments($cid,$dot,$mm){
+            try {
+                $sql = "INSERT INTO `tests`(`course_id`, `late_date`, `max_marks`) VALUES (:cid,:dot,:mm)";
+                $stmt = $this->db->prepare($sql);
+                $stmt->bindparam(':cid',$cid);
+                $stmt->bindparam(':dot',$dot);
+                $stmt->bindparam(':mm',$mm);
+                $stmt->execute();
+                return true;
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+                return false;
+            }
+        }
+
+        public function uploadAssignment($Sid,$tid,$mob){
+            try {
+                $sql = "INSERT INTO `testattempted`(`assign_id`, `id`, `upload_file`) VALUES (:Sid,:tid,:mob)";
+                $stmt = $this->db->prepare($sql);
+                $stmt->bindparam(':Sid',$Sid);
+                $stmt->bindparam(':tid',$tid);
+                $stmt->bindparam(':mob',$mob);
+                $stmt->execute();
+                return true;
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+                return false;
+            }
+        }
+        
+        public function getAssignments(){
+            try{
+                $sql = "SELECT * FROM `assignments` a inner join courses s on a.course_id = s.course_id WHERE `last_date` >= CURDATE()";
+                $stmt = $this->db->prepare($sql);
+                $stmt->execute();
+                while ($r=$stmt->fetch(PDO::FETCH_ASSOC)){
+                    $course_name = $r['name'];
+                    $course_id = $r['max_marks'];
+                    $lec_time = $r['last_date'];
+                    $lec_link = $r['assign_id'];
+                    include "./includes/acards.php";
+                }
+            }catch (PDOException $e) {
+                echo $e->getMessage();
+                return false;
+            }
+            
         }
  
     }
