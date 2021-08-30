@@ -85,30 +85,7 @@
                 return false;
             }
         }
-        public function changePwd($username,$oldpassword,$newpassword){
-            try {
-                $salted_password = md5($oldpassword.$username);
-                $new_password = md5($newpassword.$username);
-                $sql = "UPDATE `userdetails` SET `password`=:newpassword WHERE username = :username AND password = :oldpassword";
-                $stmt = $this->db->prepare($sql);
-                $stmt->bindparam(':username', $username);
-                $stmt->bindparam(':oldpassword', $salted_password);
-                $stmt->bindparam(':newpassword', $new_password);
-                $stmt->execute();
-                $result = $stmt->rowCount();
-                if ($result == 0) {
-                    echo "<div class='alert alert-danger text-center' role='alert'>Password Incorrect</div>";
-                    return false;
-                }
-                else{
-                    include './includes/successmessage.php';
-                return true;}
-            } catch (PDOException $e) {
-                echo $e->getMessage();
-                return false;
-            }
-        }
-
+        
         public function getUsers(){
             try{
                 $sql = "SELECT * FROM userdetails";

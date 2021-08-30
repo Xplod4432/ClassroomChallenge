@@ -24,6 +24,7 @@
     </div>
   </div>
   <div class="col-sm-4 my-5">
+  <?php echo "<h4>" . date('l') . "'s Timetable</h4>"; ?>
     <div class="row overflow-scroll">
 <?php
   while ($r = $results->fetch(PDO::FETCH_ASSOC)) {
@@ -36,9 +37,10 @@
 ?>
 </div>
 </div>
+<?php if ($_SESSION['accesslevel'] == 0) { ?>
 <div class="col-sm-4 my-5">
 <p>
-  <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Upcoming Tests</a>
+  <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="true" aria-controls="multiCollapseExample1">Upcoming Tests</a>
   <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample2" role="button" aria-expanded="false" aria-controls="multiCollapseExample2">Assignments Due</a>
 </p>
 <div class="row">
@@ -47,7 +49,14 @@
       <div class="card card-body">
         <div class="row overflow-scroll">
       <?php
-        $crud->getTests();
+        $results = $crud->getTests();
+        while ($r=$results->fetch(PDO::FETCH_ASSOC)){
+          $course_name = $r['name'];
+          $course_id = $r['max_marks'];
+          $lec_time = $r['dateoftest'];
+          $lec_link = $r['test_id'];
+          include "./includes/tcards.php";
+      }
       ?>
         </div>
       </div>
@@ -57,7 +66,14 @@
       <div class="card card-body">
         <div class="row overflow-scroll">
           <?php
-            $crud->getAssignments();
+            $results = $crud->getAssignments();
+            while ($r=$results->fetch(PDO::FETCH_ASSOC)){
+              $course_name = $r['name'];
+              $course_id = $r['max_marks'];
+              $lec_time = $r['last_date'];
+              $lec_link = $r['assign_id'];
+              include "./includes/acards.php";
+          }
           ?>
         </div>
       </div>
@@ -66,6 +82,7 @@
 </div>
 </div>
 </div>
+<?php } ?>
 </div>
 <?php
   include 'includes/footer.php'

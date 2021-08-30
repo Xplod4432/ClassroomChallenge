@@ -53,19 +53,35 @@ body {
         <li class="nav-item">
           <a class="nav-link bold mx-5" aria-current="page" href="./index.php">Home</a>
         </li>
+        <?php if (isset($_SESSION['userid'])){?>
         <li class="nav-item dropdown bold mx-5">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <span>
+              <?php if ($_SESSION['accesslevel'] == 1) { ?>
+              Actions
+              <?php } ?>
+              <?php if ($_SESSION['accesslevel'] == 0) { ?>
               Scores
+              <?php } ?>
             </span>
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <?php if ($_SESSION['accesslevel'] == 1) { ?>
+            <li><a class="dropdown-item" href="./newassgn.php">Create Assignment</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="./newtests.php">Create Test</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="./viewassgn.php">View Assignments</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="./viewtests.php">View Tests</a></li>
+            <?php } ?>
+            <?php if ($_SESSION['accesslevel'] == 0) { ?>
             <li><a class="dropdown-item" href="./assignments.php">Assignments</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="./tests.php">Tests</a></li>
+            <?php } ?>
           </ul>
       </ul>
-      <?php if (isset($_SESSION['userid'])){?>
       <ul class="nav navbar-nav ml-auto">
       <li class="nav-item dropdown">
           <a class="nav-link bold ms-5" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

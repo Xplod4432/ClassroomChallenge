@@ -16,6 +16,7 @@
         }else{
             $_SESSION['username'] = $username;
             $_SESSION['userid'] = $result['id'];
+            $_SESSION['accesslevel'] = $result['access_id'];
             header("Location: index.php");
         }
 

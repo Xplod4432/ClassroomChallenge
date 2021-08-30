@@ -71,20 +71,23 @@
         public function getTests(){
             try{
                 $sql = "SELECT * FROM `tests` a inner join courses s on a.course_id = s.course_id WHERE `dateoftest` >= CURDATE()";
-                $stmt = $this->db->prepare($sql);
-                $stmt->execute();
-                while ($r=$stmt->fetch(PDO::FETCH_ASSOC)){
-                    $course_name = $r['name'];
-                    $course_id = $r['max_marks'];
-                    $lec_time = $r['dateoftest'];
-                    $lec_link = $r['test_id'];
-                    include "./includes/tcards.php";
-                }
+                $result = $this->db->query($sql);
+                return $result;                
             }catch (PDOException $e) {
                 echo $e->getMessage();
                 return false;
-            }
-            
+            }   
+        }
+
+        public function getAllTests(){
+            try{
+                $sql = "SELECT * FROM `tests` a inner join courses s on a.course_id = s.course_id ORDER BY dateoftest DESC";
+                $result = $this->db->query($sql);
+                return $result;                
+            }catch (PDOException $e) {
+                echo $e->getMessage();
+                return false;
+            }   
         }
 
         public function insertAssignments($cid,$dot,$mm){
@@ -94,6 +97,20 @@
                 $stmt->bindparam(':cid',$cid);
                 $stmt->bindparam(':dot',$dot);
                 $stmt->bindparam(':mm',$mm);
+                $stmt->execute();
+                return true;
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+                return false;
+            }
+        }
+
+        public function updateAssgnMarks($subid,$mob){
+            try {
+                $sql = "UPDATE `assgn_submitted` SET `marksob`=:mob WHERE submit_id = :subid";
+                $stmt = $this->db->prepare($sql);
+                $stmt->bindparam(':subid',$subid);
+                $stmt->bindparam(':mob',$mob);
                 $stmt->execute();
                 return true;
             } catch (PDOException $e) {
@@ -117,18 +134,23 @@
             }
         }
         
+        public function getAllAssignments(){
+            try{
+                $sql = "SELECT * FROM `assignments` a inner join courses s on a.course_id = s.course_id ORDER BY last_date DESC";
+                $result = $this->db->query($sql);
+                return $result;
+            }catch (PDOException $e) {
+                echo $e->getMessage();
+                return false;
+            }
+            
+        }
+
         public function getAssignments(){
             try{
                 $sql = "SELECT * FROM `assignments` a inner join courses s on a.course_id = s.course_id WHERE `last_date` >= CURDATE()";
-                $stmt = $this->db->prepare($sql);
-                $stmt->execute();
-                while ($r=$stmt->fetch(PDO::FETCH_ASSOC)){
-                    $course_name = $r['name'];
-                    $course_id = $r['max_marks'];
-                    $lec_time = $r['last_date'];
-                    $lec_link = $r['assign_id'];
-                    include "./includes/acards.php";
-                }
+                $result = $this->db->query($sql);
+                return $result;
             }catch (PDOException $e) {
                 echo $e->getMessage();
                 return false;
