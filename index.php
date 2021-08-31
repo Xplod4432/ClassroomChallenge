@@ -23,7 +23,13 @@
     </div>
     </div>
   </div>
-  <div class="col-sm-4 my-5">
+  <div class="<?php if ($_SESSION['accesslevel'] == 1) {
+    echo "col-sm-9";
+  }
+  else {
+    echo "col-sm-4";
+  }
+  ?> my-5">
   <?php echo "<h4>" . date('l') . "'s Timetable</h4>"; ?>
     <div class="row overflow-scroll">
 <?php
@@ -40,7 +46,7 @@
 <?php if ($_SESSION['accesslevel'] == 0) { ?>
 <div class="col-sm-4 my-5">
 <p>
-  <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="true" aria-controls="multiCollapseExample1">Upcoming Tests</a>
+  <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Upcoming Tests</a>
   <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample2" role="button" aria-expanded="false" aria-controls="multiCollapseExample2">Assignments Due</a>
 </p>
 <div class="row">

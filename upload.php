@@ -1,5 +1,6 @@
 <?php
     require_once './db/conn.php';
+    require_once './includes/session.php';
     require './includes/sanitise.php';
 
     if(isset($_POST['submit'])){
@@ -16,9 +17,9 @@
         move_uploaded_file($orig_file,$destination);
 
         //Call function to insert and track if success or not
-        $isSuccess = $crud->uploadAssignment($Sid,$tid,$destination);
+        $isSuccess = $crud->uploadAssignment($tid,$Sid,$destination);
         if($isSuccess){
-            header("Location: viewrecords.php");
+            header("Location: index.php");
         }
         else{
             include 'includes/errormessage.php';

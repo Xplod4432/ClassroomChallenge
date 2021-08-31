@@ -27,6 +27,14 @@
 			dateFormat: "yy-mm-dd"
 			});
 		} );
+    $( function() {
+			$( "#lastdate" ).datepicker({
+			changeMonth: true,
+			changeYear: true,
+			yearRange: "-0:+4",
+			dateFormat: "yy-mm-dd"
+			});
+		} );
 	</script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
@@ -57,12 +65,8 @@ body {
         <li class="nav-item dropdown bold mx-5">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <span>
-              <?php if ($_SESSION['accesslevel'] == 1) { ?>
-              Actions
-              <?php } ?>
-              <?php if ($_SESSION['accesslevel'] == 0) { ?>
-              Scores
-              <?php } ?>
+              <?php if ($_SESSION['accesslevel'] == 1) { echo "Actions"; }?>
+              <?php if ($_SESSION['accesslevel'] == 0) { echo "Scores"; }?>
             </span>
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -86,15 +90,13 @@ body {
       <li class="nav-item dropdown">
           <a class="nav-link bold ms-5" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <span>
-              Hello <?php echo $_SESSION['username'] ?>
+              Hello <?php echo $_SESSION['username']?>
             </span>
           </a>
         </li>
         <li class="nav-item">
           <a class="bold btn btn-orange-moon rounded-3 ms-5" href="./logout.php">Logout</a>
-        </li>
-        <?php }?>
-    </div>
+        </li><?php } ?></div>
   </div>
 </nav>
 <div class="container">

@@ -6,7 +6,7 @@
     $results = $crud->getCourses();
 ?> 
     <h1 class="text-center">Register for Classes</h1>
-    <form method="post" action="success.php" enctype="multipart/form-data">
+    <form method="post" action="success.php" enctype="multipart/form-data" autocomplete="off">
         <div class="mb-3">
             <label for="fname" class="form-label">First Name</label>
             <input required type="text" class="form-control" id="fname" name="blogtitle">

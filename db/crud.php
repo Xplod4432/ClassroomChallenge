@@ -83,16 +83,38 @@
             try{
                 $sql = "SELECT * FROM `tests` a inner join courses s on a.course_id = s.course_id ORDER BY dateoftest DESC";
                 $result = $this->db->query($sql);
-                return $result;                
+                return $result;
             }catch (PDOException $e) {
                 echo $e->getMessage();
                 return false;
             }   
         }
 
-        public function insertAssignments($cid,$dot,$mm){
+        public function getTestsById($testid){
             try {
-                $sql = "INSERT INTO `tests`(`course_id`, `late_date`, `max_marks`) VALUES (:cid,:dot,:mm)";
+                $sql = "SELECT * FROM `testattempted` a inner join userdetails s on a.id = s.id WHERE`test_id` = $testid";
+                $result = $this->db->query($sql);
+                return $result;
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+                return false;
+            }
+        }
+
+        public function getTestsBySId($id){
+            try {
+                $sql = "SELECT * FROM `testattempted` a inner join tests s on a.test_id = s.test_id WHERE `id` = $id";
+                $result = $this->db->query($sql);
+                return $result;
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+                return false;
+            }
+        }
+
+        public function insertAssgn($cid,$dot,$mm){
+            try {
+                $sql = "INSERT INTO `assignments`(`course_id`, `last_date`, `max_marks`) VALUES (:cid,:dot,:mm)";
                 $stmt = $this->db->prepare($sql);
                 $stmt->bindparam(':cid',$cid);
                 $stmt->bindparam(':dot',$dot);
@@ -121,7 +143,7 @@
 
         public function uploadAssignment($Sid,$tid,$mob){
             try {
-                $sql = "INSERT INTO `testattempted`(`assign_id`, `id`, `upload_file`) VALUES (:Sid,:tid,:mob)";
+                $sql = "INSERT INTO `assgn_submitted`(`assign_id`, `id`, `upload_file`) VALUES (:Sid,:tid,:mob)";
                 $stmt = $this->db->prepare($sql);
                 $stmt->bindparam(':Sid',$Sid);
                 $stmt->bindparam(':tid',$tid);
@@ -156,6 +178,28 @@
                 return false;
             }
             
+        }
+
+        public function getAssignmentsById($assgnid){
+            try {
+                $sql = "SELECT * FROM `assgn_submitted` a inner join userdetails s on a.id = s.id WHERE `assign_id` = $assgnid";
+                $result = $this->db->query($sql);
+                return $result;
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+                return false;
+            }
+        }
+
+        public function getAssignmentsBySId($id){
+            try {
+                $sql = "SELECT * FROM `assgn_submitted` a inner join assignments s on a.assign_id = s.assign_id WHERE `id` = $id";
+                $result = $this->db->query($sql);
+                return $result;
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+                return false;
+            }
         }
  
     }

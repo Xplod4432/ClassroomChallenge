@@ -1,8 +1,8 @@
-<?php 
-    require_once './includes/admin_check.php';
+<?php
     $title = "View Tests";
     require_once './includes/header.php';
     require_once './db/conn.php';
+    require_once './includes/admin_check.php';
 
     $results = $crud->getAllTests();
 ?>
